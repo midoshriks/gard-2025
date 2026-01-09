@@ -15,7 +15,18 @@
             <tbody>
                 @forelse($employees as $index => $employee)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        {{-- <td>{{ $index + 1 }}</td> --}}
+                        <td>
+                            @if ($index == 0)
+                                🥇
+                            @elseif($index == 1)
+                                🥈
+                            @elseif($index == 2)
+                                🥉
+                            @else
+                                {{ $index + 1 }}
+                            @endif
+                        </td>
                         <td>{{ $employee->name }}</td>
                         <td>{{ $employee->total_amount }}</td>
                     </tr>

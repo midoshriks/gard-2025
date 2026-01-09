@@ -44,6 +44,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $totalsum = 0; @endphp
                                 @foreach ($dates as $date)
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($date)->format('d-M') }}</td>
@@ -73,8 +74,11 @@
                                                 </button>
                                             </form>
                                         </td>
-
                                         <td><strong>{{ $totalPerDay }}</strong></td>
+                                        @php
+                                            $totalsum += $totalPerDay;
+                                            // dd($totalsum);
+                                        @endphp
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -92,7 +96,9 @@
                                         @endphp
                                         <th><strong>{{ $totalPerEmployee }}</strong></th>
                                     @endforeach
+
                                     <th>{{ display('Action') }}</th>
+                                    <th>{{ $totalsum }}</th>
                                     <th></th>
                                 </tr>
                             </tfoot>

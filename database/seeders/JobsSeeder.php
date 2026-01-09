@@ -32,6 +32,7 @@ class JobsSeeder extends Seeder
             "16" => display('security'),
             "17" => display('Steward'),
             "18" => display('technical'),
+            "19" => display('Bus Boy'),
 
         ];
         foreach ($jobs as  $job) {

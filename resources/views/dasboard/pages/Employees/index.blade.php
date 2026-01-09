@@ -154,10 +154,9 @@
                             </table>
 
                             <div class="card-footer text-end">
-                                <button type="submit" class="btn btn-red">{{ display('delete all') }}</button>
-                                <input class="btn btn-ghost-danger" type="button" onclick="selects()" value="Select All" />
-                                <input class="btn btn-ghost-green" type="button" onclick="deSelect()"
-                                    value="Deselect All" />
+                                <button type="submit" class="btn btn-danger">{{ display('delete all') }}</button>
+                                <input class="btn btn-secondary" type="button" onclick="selects()" value="Select All" />
+                                <input class="btn btn-success" type="button" onclick="deSelect()" value="Deselect All" />
                             </div>
 
                         </form>
@@ -172,7 +171,9 @@
     <!-- /.row -->
 @endsection
 
-<script type="text/javascript">
+@include('dasboard.layouts.script_deletes')
+
+{{-- <script type="text/javascript">
     function selects() {
         var ele = document.getElementsByClassName("ids");
         for (var i = 0; i < ele.length; i++) {
@@ -186,4 +187,4 @@
             if (ele[i].type == "checkbox") ele[i].checked = false;
         }
     }
-</script>
+</script> --}}

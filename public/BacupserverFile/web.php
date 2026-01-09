@@ -1,20 +1,18 @@
 <?php
 // Controllers Office
-
 use App\Models\Advance;
-use App\Models\SettingPdf;
 
 // Controllers Gard
+use App\Models\SettingPdf;
 use App\Models\SweetProduction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\TipController;
+
+
+
 use Illuminate\Support\Facades\Artisan;
-
-
-
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobsController;
 use App\Http\Controllers\GardsController;
 use App\Http\Controllers\UsersController;
@@ -22,26 +20,24 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguagesController;
 use App\Http\Controllers\Gard\SweetController;
 use App\Http\Controllers\SettingPdfController;
-// use App\Http\Controllers\CashierPostController;
-// use App\Http\Controllers\SweetController;
 use App\Http\Controllers\Socil\GoogleController;
+// use App\Http\Controllers\SweetController;
+use App\Http\Controllers\Gard\BigWaterController;
 // use App\Http\Controllers\AdvanceController;
 // use App\Http\Controllers\BigWaterController;
-use App\Http\Controllers\Gard\BigWaterController;
 use App\Http\Controllers\Dashboard\RolsController;
-// use App\Http\Controllers\PepsiCansController;
 use App\Http\Controllers\Gard\PepsiCansController;
+// use App\Http\Controllers\PepsiCansController;
+use App\Http\Controllers\Socil\FacebookController;
 // use App\Http\Controllers\SmallWaterController;
 // use App\Http\Controllers\PepsiPlasticController;
-use App\Http\Controllers\Socil\FacebookController;
 use App\Http\Controllers\Gard\SmallWaterController;
 use App\Http\Controllers\Office\AdvancesControllers;
-// use App\Http\Controllers\SweetProductionController;
 use App\Http\Controllers\Dashboard\ReportsController;
+// use App\Http\Controllers\SweetProductionController;
 use App\Http\Controllers\Gard\PepsiPlasticController;
 use App\Http\Controllers\Dashboard\EmployeesController;
 use App\Http\Controllers\Gard\SweetProductionController;
-use App\Http\Controllers\Dashboard\CashierPostController;
 use App\Http\Controllers\Dashboard\SectionReportsController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -65,16 +61,15 @@ Route::get('clear', function () {
     Artisan::call('config:clear');
     dd("Cache is cleared");
 });
-
 Route::get('migrate:refresh', function () {
     Artisan::call('migrate:refresh');
     dd("run migrate:refresh");
 });
-
 Route::get('migrate:refreshseed', function () {
     Artisan::call('migrate:refresh --seed');
     dd("run migrate:refresh --seed");
 });
+
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -108,11 +103,6 @@ Route::group(
 
         // Tip leaderboard
         Route::get('/tips/leaderboard', [TipController::class, 'leaderboard'])->name('tip.leaderboard');
-
-        // CashierPost
-        Route::resource('/cashierpost', CashierPostController::class);
-        Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
-        Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
     }
 );
 
@@ -222,11 +212,6 @@ Route::group(
 
             // Repotes
             Route::resource('/reports', ReportsController::class);
-
-            // CashierPost
-            Route::resource('/cashierpost', CashierPostController::class);
-            Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
-            Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
         });
     }
 );

@@ -20,7 +20,7 @@ return new class extends Migration
             // $table->string('marital_status'); // الحالة الاجتماعية
             // $table->date('appointment_date'); // تاريخ التعيـــــن
             // // $table->string('appointment_date'); // تاريخ التعيـــــن
-            $table->bigInteger('slide_id')->unsigned(); // الشريحـة
+            $table->bigInteger('slide_id')->unsigned()->default(3); // الشريحـة
             $table->foreign('slide_id')->references('id')->on('slides')->onDelete('cascade');
             // $table->string('basic_salary'); // الراتب الأساسي
             // $table->string('uniform_last_received')->nullable(); //اليونيفورم أخر استلام

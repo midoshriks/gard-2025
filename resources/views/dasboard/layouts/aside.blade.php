@@ -100,6 +100,28 @@
                     </ul>
                 </li>
 
+                <!-- ---------------------CashierPosts--------------------------- -->
+                <li class="nav-header">{{ display('Cashier Posts') }}</li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-database"></i>
+                        <p>
+                            {{ display('Cashier Mime') }}
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard.cashierpost.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ display('Cashier Posts') }}</p>
+                                <i class="fas fa-cash"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
 
                 <!-- ---------------------SYSTEM--------------------------- -->
                 <li class="nav-header">

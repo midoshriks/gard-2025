@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreTipRequest;
 use App\Http\Requests\UpdateTipRequest;
+use App\Models\Jobs;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TipController extends Controller
@@ -18,7 +19,13 @@ class TipController extends Controller
     public function index()
     {
         // هات الموظفين
-        $employees = Employees::whereIn('job_id', ['8', '9'])->get();
+        $CapId = Jobs::where('name', 'Captain')->first();
+        $WaiterId = Jobs::where('name', 'Waiter')->first();
+        $BusBoyId = Jobs::where('name', 'Bus Boy')->first();
+
+
+        // dd($CapId->id, $WaiterId->id, $BusBoyId->id);
+        $employees = Employees::whereIn('job_id', [$CapId->id, $WaiterId->id, $BusBoyId->id])->get();
         // $employees = User::all(); // أو Employee::all() لو بتسميهم Employee
 
         // هات التواريخ المميزة
@@ -40,7 +47,14 @@ class TipController extends Controller
      */
     public function create()
     {
-        $employees = Employees::whereIn('job_id', ['8', '9'])->get();
+        $CapId = Jobs::where('name', 'Captain')->first();
+        $WaiterId = Jobs::where('name', 'Waiter')->first();
+        $BusBoyId = Jobs::where('name', 'Bus Boy')->first();
+
+        // dd($CapId->id, $WaiterId->id, $BusBoyId->id);
+        $employees = Employees::whereIn('job_id', [$CapId->id, $WaiterId->id, $BusBoyId->id])->get();
+        // $employees = Employees::whereIn('job_id', ['8', '9'])->get();
+
         return view('dasboard.pages.Tips.create', compact('employees'));
     }
 
@@ -92,7 +106,14 @@ class TipController extends Controller
     public function edit(Tip $tip, $date)
     {
         // dd($tip);
-        $employees = Employees::whereIn('job_id', ['8', '9'])->get();
+        $CapId = Jobs::where('name', 'Captain')->first();
+        $WaiterId = Jobs::where('name', 'Waiter')->first();
+        $BusBoyId = Jobs::where('name', 'Bus Boy')->first();
+
+        // dd($CapId->id, $WaiterId->id, $BusBoyId->id);
+        $employees = Employees::whereIn('job_id', [$CapId->id, $WaiterId->id, $BusBoyId->id])->get();
+
+        // $employees = Employees::whereIn('job_id', ['8', '9'])->get();
 
         // هات التيبس حسب التاريخ
         $tips = Tip::whereDate('date', $date)->get()->keyBy('employe_id');

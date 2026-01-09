@@ -26,7 +26,7 @@ class EmployeesImport implements
             // dd($row['appointment_date'], Carbon::parse($row['appointment_date'])),
             // // 'appointment_date' => $row['appointment_date'],
             // // dd($row['appointment_date'],Carbon::parse($row['appointment_date'])),
-            'slide' => $row['slide'],
+            'slide_id' => $row['slide_id'],
             // 'basic_salary' => $row['basic_salary'],
             // 'uniform_last_received' => $row['uniform_last_received'],
             // 'uniform_due_date' => $row['uniform_due_date'],
