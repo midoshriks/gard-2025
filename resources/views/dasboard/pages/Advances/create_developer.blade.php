@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container">
-
         <div>
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -13,8 +12,6 @@
                         <img src="{{ asset('assets/logo/tahrir2.png') }}" alt="Mido Logo"
                             class="brand-image img-circle elevation-3" style="opacity: .8">
                     </div>
-
-
 
                     <h2 class="mr-4 mt-4">اختيار الوظيفة والموظفين</h2>
 
@@ -37,25 +34,6 @@
                             </select>
                         </div>
                     </form>
-
-                    {{--
-                        <!-- اختيار الموظفين -->
-                        @if (isset($employees) && count($employees) > 0)
-                            <div style="margin-top: 20px;">
-                                <label for="employee-select">اختر موظف:</label>
-                                <select id="employee-select" class="form-control">
-                                    <option value="">-- اختر موظف --</option>
-                                    @foreach ($employees as $employee)
-                                        <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @elseif (isset($jobId))
-                            <div style="margin-top: 20px;">
-                                <p>لا يوجد موظفين متاحين لهذه الوظيفة.</p>
-                            </div>
-                        @endif
-                    --}}
 
                     <form action="{{ route('store.advance') }}" method="post">
                         @csrf

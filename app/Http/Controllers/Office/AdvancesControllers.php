@@ -50,10 +50,21 @@ class AdvancesControllers extends Controller
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $request->validate([
-            'name_employee' => 'required|string|unique:advances,name_employee',
+            //     'name_employee' => 'required|string|unique:advances,name_employee',
+            'name_employee' => 'required|string',
             'amount' => 'required|integer',
         ]);
+
+        $advance = Advance::where('name_employee', $request->name_employee)
+            ->where('job_id', $request->job_id)->first();
+        if ($advance) {
+            Alert::toast('هذا الموظف لديه سلفة مسجلة بالفعل بمبلغ ' . $advance->amount, 'error');
+            // Alert::error('خطأ', 'هذا الموظف لديه سلفة مسجلة بالفعل');
+            return view('dasboard.pages.Advances.thinkes', compact('advance'));
+        }
 
         $advance = new Advance();
         $advance->name_employee = $request->name_employee;
@@ -69,7 +80,7 @@ class AdvancesControllers extends Controller
         }
         // dd($advance,);
 
-        Alert::toast('Successfully responding to your advance request');
+        Alert::toast('Successfully responding to your advance request', 'success');
         return redirect()->route('dashboard.advance.index');
     }
 
@@ -104,7 +115,7 @@ class AdvancesControllers extends Controller
         // dd($advance);
         $advance->update();
 
-        Alert::toast('Successfully Update your advance ');
+        Alert::toast('Successfully Update your advance', 'success');
         return redirect()->route('dashboard.advance.index');
     }
 
@@ -144,7 +155,7 @@ class AdvancesControllers extends Controller
         Advance::whereIn('id', $ids)->delete();
         // $ids->answers()->delete();
 
-        Alert::toast('deleted successfullyall',);
+        Alert::toast('deleted successfullyall', 'success');
         return redirect()->route('dashboard.advance.index');
     }
 
@@ -157,7 +168,7 @@ class AdvancesControllers extends Controller
         // return Excel::download(new AdvanceExport, 'advance.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
-        /**
+    /**
      * Pdf Data pdf.
      */
     public function exportpdf()
@@ -228,5 +239,4 @@ class AdvancesControllers extends Controller
 
         //* =================================================================================================================
     }
-
 }
