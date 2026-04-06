@@ -17,7 +17,7 @@
                 <option>{{ display('chooes') }}</option>
                 @foreach ($jobs as $job)
                     <option {{ $job->id == $advance->job_id ? 'selected' : '' }} value="{{ $job->id }}">
-                        {{ $job->name }}
+                        {{ display($job->name) }}
                     </option>
                 @endforeach
             </select>
