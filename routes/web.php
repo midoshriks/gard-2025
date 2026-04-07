@@ -1,48 +1,36 @@
 <?php
 // Controllers Office
 
-use App\Models\Advance;
-use App\Models\SettingPdf;
-
-// Controllers Gard
-use App\Models\SweetProduction;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PdfController;
-use App\Http\Controllers\TipController;
-use Illuminate\Support\Facades\Artisan;
-
-
-
+use App\Http\Controllers\Dashboard\CashierPostController;
+use App\Http\Controllers\Dashboard\EmployeesController;
+use App\Http\Controllers\Dashboard\ReportsController;
+use App\Http\Controllers\Dashboard\RolsController;
+use App\Http\Controllers\Dashboard\SectionReportsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DayOffController;
+use App\Http\Controllers\Gard\BigWaterController;
+use App\Http\Controllers\Gard\PepsiCansController;
+use App\Http\Controllers\Gard\PepsiPlasticController;
+use App\Http\Controllers\Gard\SmallWaterController;
+use App\Http\Controllers\Gard\SweetController;
+use App\Http\Controllers\Gard\SweetProductionController;
+use App\Http\Controllers\GardsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobsController;
-use App\Http\Controllers\GardsController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguagesController;
-use App\Http\Controllers\Gard\SweetController;
-use App\Http\Controllers\SettingPdfController;
-// use App\Http\Controllers\CashierPostController;
-// use App\Http\Controllers\SweetController;
-use App\Http\Controllers\Socil\GoogleController;
-// use App\Http\Controllers\AdvanceController;
-// use App\Http\Controllers\BigWaterController;
-use App\Http\Controllers\Gard\BigWaterController;
-use App\Http\Controllers\Dashboard\RolsController;
-// use App\Http\Controllers\PepsiCansController;
-use App\Http\Controllers\Gard\PepsiCansController;
-// use App\Http\Controllers\SmallWaterController;
-// use App\Http\Controllers\PepsiPlasticController;
-use App\Http\Controllers\Socil\FacebookController;
-use App\Http\Controllers\Gard\SmallWaterController;
 use App\Http\Controllers\Office\AdvancesControllers;
-// use App\Http\Controllers\SweetProductionController;
-use App\Http\Controllers\Dashboard\ReportsController;
-use App\Http\Controllers\Gard\PepsiPlasticController;
-use App\Http\Controllers\Dashboard\EmployeesController;
-use App\Http\Controllers\Gard\SweetProductionController;
-use App\Http\Controllers\Dashboard\CashierPostController;
-use App\Http\Controllers\Dashboard\SectionReportsController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\SettingPdfController;
+use App\Http\Controllers\Socil\FacebookController;
+use App\Http\Controllers\Socil\GoogleController;
+use App\Http\Controllers\TipController;
+use App\Http\Controllers\UsersController;
+use App\Models\Advance;
+use App\Models\SettingPdf;
+use App\Models\SweetProduction;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -113,6 +101,10 @@ Route::group(
         Route::resource('/cashierpost', CashierPostController::class);
         Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
         Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
+
+        // ---- لينك الموظفين العام (بدون لوجين) ----
+        Route::get('/dayoff',  [DayOffController::class, 'index'])->name('dayoff.index');
+        Route::post('/dayoff', [DayOffController::class, 'store'])->name('dayoff.store');
     }
 );
 
@@ -227,6 +219,14 @@ Route::group(
             Route::resource('/cashierpost', CashierPostController::class);
             Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
             Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
+
+            // طلبات الراحة - للأدمن
+
+            Route::get('/dayoff',   [DayOffController::class, 'adminIndex'])->name('dayoff.index');
+
+            // ✅ الإصلاح: POST بدل PATCH — عشان onchange submit يشتغل صح
+            Route::post('/dayoff/{id}/status',  [DayOffController::class, 'updateStatus'])->name('dayoff.status');
+            Route::delete('/dayoff/{id}',       [DayOffController::class, 'destroy'])->name('dayoff.destroy');
         });
     }
 );

@@ -181,7 +181,7 @@
                         </li>
                     </ul>
                 </li>
-
+                {{-- Tip   --}}
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <p>
@@ -207,6 +207,26 @@
                         </li>
                     </ul>
                 </li>
+                {{-- Day Off --}}
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <p>
+                            {{ display('day ' . 'off') }}
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                        <i class="fas fa-calendar-day"></i>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard.dayoff.index') }}" class="nav-link" rel="noopener noreferrer">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ display('day ' . 'off') }}</p>
+                                <i class="fas fa-calendar-day"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
                 <!-- ---------------------@ FOR  Files--------------------------- -->
                 <li class="nav-header">{{ display('Files') }}</li>
