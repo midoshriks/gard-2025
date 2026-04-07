@@ -10,31 +10,48 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DayOffController extends Controller
 {
+    // الحد الأقصى لعدد الأيام لكل موظف
+    const MAX_DAYS_PER_EMPLOYEE = 5;
+
+    // الحد الأقصى من نفس الوظيفة في اليوم الواحد
+    const MAX_SAME_JOB_PER_DAY = 2;
+
+    // عدد الأيام المعروضة
+    const DAYS_TO_SHOW = 15;
+
     /**
      * صفحة الموظف العامة - بدون لوجين
      */
     public function index()
     {
         $days = collect();
-        for ($i = 0; $i < 15; $i++) {
-            $day = Carbon::today()->addDays($i);
 
-            // ✅ الإصلاح: بس pending أو approved يعتبر محجوز
-            // لو rejected → اليوم يتفتح تاني
-            $bookedEntry = DayOff::where('date', $day->toDateString())
+        for ($i = 0; $i < self::DAYS_TO_SHOW; $i++) {
+            $day = Carbon::today()->addDays($i);
+            $dateStr = $day->toDateString();
+
+            // كل الحجوزات على اليوم ده (pending أو approved)
+            $bookings = DayOff::where('date', $dateStr)
                 ->whereIn('status', ['pending', 'approved'])
-                ->with('employee')
-                ->first();
+                ->with('employee.job')
+                ->get();
+
+            // جمع الوظائف وعددها في اليوم ده
+            $jobCounts = $bookings->groupBy('employee.job_id')
+                ->map(fn($group) => $group->count());
+
+            // هل اليوم محجوز بالكامل؟
+            // (مش لازم — لأن كل وظيفة ليها حد مختلف)
+            // بس لو مفيش موظفين خالص يبقى متاح للكل
 
             $days->push([
                 'date'      => $day,
-                'date_str'  => $day->toDateString(),
+                'date_str'  => $dateStr,
                 'day_name'  => $day->locale('ar')->isoFormat('dddd'),
                 'day_num'   => $day->format('d'),
                 'month'     => $day->locale('ar')->isoFormat('MMMM'),
-                'is_booked' => $bookedEntry ? true : false,
-                'booked_by' => $bookedEntry ? $bookedEntry->employee->name : null,
-                'status'    => $bookedEntry ? $bookedEntry->status : null,
+                'bookings'  => $bookings, // كل الحجوزات
+                'job_counts'=> $jobCounts,
             ]);
         }
 
@@ -51,47 +68,69 @@ class DayOffController extends Controller
             'employee_code' => 'required|integer',
         ]);
 
-        // التحقق من رقم الموظف
-        $employee = Employees::where('code', $request->employee_code)->first();
+        // 1. التحقق من رقم الموظف
+        $employee = Employees::where('code', $request->employee_code)
+            ->with('job')
+            ->first();
 
         if (!$employee) {
             Alert::error('خطأ', 'رقم الموظف غير صحيح، تأكد من الرقم وحاول مرة تانية');
             return back()->withInput();
         }
 
-        // التحقق إن اليوم مش محجوز (pending أو approved بس)
-        $existing = DayOff::where('date', $request->date)
+        // 2. التحقق إن الموظف ده مسجلش نفس اليوم ده قبل كده
+        $alreadyBookedSameDay = DayOff::where('employee_id', $employee->id)
+            ->where('date', $request->date)
             ->whereIn('status', ['pending', 'approved'])
-            ->first();
+            ->exists();
 
-        if ($existing) {
-            Alert::error('اليوم محجوز', 'الموظف ' . $existing->employee->name . ' حجز الراحة في اليوم ده قبلك');
+        if ($alreadyBookedSameDay) {
+            Alert::error('مسجل قبل كده', 'أنت سجلت راحة في اليوم ده بالفعل');
             return back()->withInput();
         }
 
-        // التحقق إن الموظف مش عنده حجز تاني في المستقبل
-        $myExisting = DayOff::where('employee_id', $employee->id)
+        // 3. التحقق من الحد الأقصى للموظف (5 أيام)
+        $myBookingsCount = DayOff::where('employee_id', $employee->id)
             ->whereIn('status', ['pending', 'approved'])
             ->where('date', '>=', Carbon::today())
-            ->first();
+            ->count();
 
-        if ($myExisting) {
+        if ($myBookingsCount >= self::MAX_DAYS_PER_EMPLOYEE) {
             Alert::error(
-                'عندك راحة مسجلة',
-                'عندك راحة مسجلة بالفعل يوم ' . $myExisting->date->locale('ar')->isoFormat('dddd D MMMM')
+                'وصلت الحد الأقصى',
+                'عندك ' . $myBookingsCount . ' أيام راحة مسجلة، الحد الأقصى هو ' . self::MAX_DAYS_PER_EMPLOYEE . ' أيام'
             );
             return back()->withInput();
         }
 
+        // 4. التحقق من نفس الوظيفة في اليوم ده (حد أقصى 2 من نفس الوظيفة)
+        $sameJobCount = DayOff::where('date', $request->date)
+            ->whereIn('status', ['pending', 'approved'])
+            ->whereHas('employee', function ($q) use ($employee) {
+                $q->where('job_id', $employee->job_id);
+            })
+            ->count();
+
+        if ($sameJobCount >= self::MAX_SAME_JOB_PER_DAY) {
+            $jobName = $employee->job->name ?? 'وظيفتك';
+            Alert::error(
+                'الوظيفة مكتملة',
+                'في اليوم ده عدد ' . $jobName . ' وصل للحد الأقصى (' . self::MAX_SAME_JOB_PER_DAY . ' موظفين)'
+            );
+            return back()->withInput();
+        }
+
+        // 5. تسجيل الراحة
         DayOff::create([
             'employee_id' => $employee->id,
             'date'        => $request->date,
             'status'      => 'pending',
         ]);
 
+        $dayLabel = Carbon::parse($request->date)->locale('ar')->isoFormat('dddd D MMMM');
         Alert::success(
-            'تم التسجيل',
-            'تم تسجيل راحتك يوم ' . Carbon::parse($request->date)->locale('ar')->isoFormat('dddd D MMMM') . ' بنجاح يا ' . $employee->name
+            'تم التسجيل ✓',
+            'تم تسجيل راحتك يوم ' . $dayLabel . ' بنجاح يا ' . $employee->name
         );
         return redirect()->route('dayoff.index');
     }
@@ -109,11 +148,10 @@ class DayOffController extends Controller
         confirmDelete($title, $text);
 
         return view('dasboard.pages.DayOff.dayoff_admin_index', compact('dayoffs'));
-        // return view('dasboard.pages.DayOff.admin_index', compact('dayoffs'));
     }
 
     /**
-     * ✅ الإصلاح: POST عادي بدل PATCH — بيشتغل صح مع الـ select
+     * تغيير حالة الطلب — POST عادي
      */
     public function updateStatus(Request $request, $id)
     {

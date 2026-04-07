@@ -20,10 +20,7 @@
 
             <div class="card-body">
                 <div class="table-responsive-sm">
-                    {{--
-                        ✅ الإصلاح: مش بنستخدم id="example1" هنا عشان DataTables
-                        مش تتعارض مع الـ select onchange
-                    --}}
+                    {{-- ⚠️ بدون id="example1" عشان DataTables ما تتعارضش مع الـ select --}}
                     <table class="table table-bordered table-striped text-center">
                         <thead>
                             <tr>
@@ -41,7 +38,11 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td><strong>{{ $dayoff->employee->name }}</strong></td>
-                                    <td>{{ display($dayoff->employee->job->name ?? '—') }}</td>
+                                    <td>
+                                        <span class="badge badge-secondary p-1">
+                                            {{ display($dayoff->employee->job->name ?? '—') }}
+                                        </span>
+                                    </td>
                                     <td>
                                         <span class="badge badge-primary p-2">
                                             {{ \Carbon\Carbon::parse($dayoff->date)->locale('ar')->isoFormat('dddd D MMMM YYYY') }}
@@ -62,14 +63,9 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td>{{ $dayoff->created_at->format('d-m-Y') }}</td>
+                                    <td>{{ $dayoff->created_at->format('d-m-Y H:i') }}</td>
                                     <td>
-                                        {{--
-                                            ✅ الإصلاح الرئيسي:
-                                            - استخدمنا POST عادي (مش PATCH)
-                                            - مضفناش @method('PATCH')
-                                            - الراوت بقى POST في web.php
-                                        --}}
+                                        {{-- تغيير الحالة — POST عادي --}}
                                         <form
                                             action="{{ route('dashboard.dayoff.status', $dayoff->id) }}"
                                             method="POST"
@@ -83,7 +79,7 @@
                                                 onchange="this.form.submit()"
                                             >
                                                 <option value="pending"
-                                                    {{ $dayoff->status === 'pending' ? 'selected' : '' }}>
+                                                    {{ $dayoff->status === 'pending'  ? 'selected' : '' }}>
                                                     ⏳ انتظار
                                                 </option>
                                                 <option value="approved"

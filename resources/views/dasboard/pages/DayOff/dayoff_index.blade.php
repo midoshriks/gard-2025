@@ -16,11 +16,10 @@
         :root {
             --bg: #0f0f1a;
             --card: #1a1a2e;
-            --card2: #16213e;
             --accent: #e94560;
-            --accent2: #0f3460;
             --gold: #f5a623;
             --green: #2ecc71;
+            --blue: #3498db;
             --text: #e0e0e0;
             --muted: #7a7a9a;
             --border: rgba(255,255,255,0.08);
@@ -34,28 +33,13 @@
             overflow-x: hidden;
         }
 
-        /* خلفية متحركة */
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse, rgba(233,69,96,0.15) 0%, transparent 60%);
+            top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse, rgba(233,69,96,0.12) 0%, transparent 60%);
             animation: pulse-bg 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -50%;
-            left: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse, rgba(15,52,96,0.3) 0%, transparent 60%);
-            animation: pulse-bg 8s ease-in-out infinite reverse;
             pointer-events: none;
         }
 
@@ -65,55 +49,75 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
             z-index: 1;
         }
 
-        /* هيدر */
+        /* ========== هيدر ========== */
         .header {
             text-align: center;
-            padding: 50px 20px 30px;
+            padding: 40px 20px 30px;
         }
 
         .logo-badge {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            background: linear-gradient(135deg, var(--accent), #8e0e25);
             padding: 10px 25px;
             border-radius: 50px;
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: 1px;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(233,69,96,0.4);
         }
 
         .header h1 {
-            font-size: clamp(28px, 5vw, 48px);
+            font-size: clamp(26px, 5vw, 44px);
             font-weight: 900;
-            line-height: 1.2;
-            margin-bottom: 10px;
             background: linear-gradient(135deg, #fff 30%, var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 8px;
         }
 
-        .header p {
-            color: var(--muted);
-            font-size: 16px;
+        .header p { color: var(--muted); font-size: 15px; }
+
+        /* ========== شريط المعلومات ========== */
+        .info-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
         }
 
-        /* كروت الأيام */
+        .info-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-chip .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ========== كروت الأيام ========== */
         .days-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--muted);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -128,16 +132,16 @@
 
         .days-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 14px;
+            margin-bottom: 35px;
         }
 
         .day-card {
             background: var(--card);
             border: 2px solid var(--border);
             border-radius: 20px;
-            padding: 20px 15px;
+            padding: 18px 12px 14px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -146,102 +150,91 @@
             user-select: none;
         }
 
-        .day-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(233,69,96,0.1));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .day-card:hover:not(.booked) {
+        .day-card:hover:not(.full-booked) {
             border-color: var(--accent);
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(233,69,96,0.25);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(233,69,96,0.2);
         }
-
-        .day-card:hover:not(.booked)::before { opacity: 1; }
 
         .day-card.selected {
             border-color: var(--accent);
-            background: linear-gradient(135deg, var(--card), rgba(233,69,96,0.2));
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(233,69,96,0.35);
+            background: linear-gradient(135deg, var(--card), rgba(233,69,96,0.18));
+            transform: translateY(-5px) scale(1.04);
+            box-shadow: 0 18px 45px rgba(233,69,96,0.3);
         }
 
-        .day-card.selected .day-num {
-            color: var(--accent);
-        }
-
-        .day-card.booked {
-            background: rgba(255,255,255,0.02);
-            border-color: rgba(255,255,255,0.04);
+        /* اليوم مكتمل (كل الوظائف وصلت حدها) */
+        .day-card.full-booked {
+            opacity: 0.5;
             cursor: not-allowed;
-            opacity: 0.6;
+            border-color: rgba(255,255,255,0.04);
         }
 
-        .day-card.today {
-            border-color: var(--gold);
-        }
-
-        .day-card.today .day-name {
-            color: var(--gold);
-        }
+        .day-card.today { border-color: var(--gold); }
+        .day-card.today .day-name { color: var(--gold); }
 
         .day-num {
-            font-size: 40px;
+            font-size: 38px;
             font-weight: 900;
             line-height: 1;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             transition: color 0.3s;
         }
 
-        .day-name {
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 3px;
-        }
+        .day-card.selected .day-num { color: var(--accent); }
 
-        .day-month {
-            font-size: 12px;
-            color: var(--muted);
-            opacity: 0.7;
-        }
+        .day-name { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+        .day-month { font-size: 11px; color: var(--muted); opacity: 0.7; }
 
-        .booked-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 3px 8px;
-            font-size: 10px;
-            color: var(--muted);
-        }
-
+        /* شارة الاختيار */
         .selected-badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 8px; left: 8px;
             background: var(--accent);
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 22px; height: 22px;
             display: none;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
         }
-
         .day-card.selected .selected-badge { display: flex; }
 
-        /* فورم التأكيد */
+        /* حجوزات الكارت */
+        .card-bookings {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .booking-tag {
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.07);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .booking-tag .dot-job {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ========== فورم التأكيد ========== */
         .confirm-section {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 24px;
-            padding: 35px;
+            padding: 32px;
             margin-bottom: 30px;
             display: none;
             animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -250,35 +243,33 @@
         .confirm-section.show { display: block; }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(25px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .selected-day-display {
-            background: linear-gradient(135deg, var(--accent2), rgba(233,69,96,0.2));
-            border: 1px solid rgba(233,69,96,0.3);
+            background: linear-gradient(135deg, rgba(15,52,96,0.5), rgba(233,69,96,0.15));
+            border: 1px solid rgba(233,69,96,0.25);
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 18px;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
         }
 
-        .selected-day-icon {
-            font-size: 40px;
-        }
+        .selected-day-icon { font-size: 36px; }
 
         .selected-day-info h3 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #fff;
         }
 
         .selected-day-info p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--muted);
-            margin-top: 3px;
+            margin-top: 2px;
         }
 
         .form-label {
@@ -295,11 +286,11 @@
             border: 2px solid var(--border);
             border-radius: 14px;
             padding: 16px 20px;
-            font-size: 18px;
+            font-size: 20px;
             font-family: 'Cairo', sans-serif;
             color: #fff;
             text-align: center;
-            letter-spacing: 5px;
+            letter-spacing: 6px;
             transition: border-color 0.3s, box-shadow 0.3s;
             outline: none;
         }
@@ -312,96 +303,99 @@
         .form-input::placeholder {
             letter-spacing: 2px;
             color: var(--muted);
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .submit-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--accent), #c0392b);
+            background: linear-gradient(135deg, var(--accent), #b03030);
             border: none;
             border-radius: 14px;
-            padding: 18px;
-            font-size: 18px;
+            padding: 17px;
+            font-size: 17px;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 18px;
             transition: all 0.3s;
-            box-shadow: 0 8px 25px rgba(233,69,96,0.4);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(233,69,96,0.35);
         }
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(233,69,96,0.5);
+            box-shadow: 0 12px 30px rgba(233,69,96,0.5);
         }
 
-        .submit-btn:active { transform: translateY(0); }
-
-        .submit-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.1);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .submit-btn:hover::after { opacity: 1; }
-
-        /* رسائل السويت ألرت */
+        /* ========== تنبيه خطأ ========== */
         .alert-box {
             border-radius: 14px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
             gap: 12px;
             font-size: 14px;
             font-weight: 600;
-        }
-
-        .alert-error {
-            background: rgba(233,69,96,0.15);
+            background: rgba(233,69,96,0.12);
             border: 1px solid rgba(233,69,96,0.3);
-            color: #ff7b8a;
+            color: #ff8095;
         }
 
-        /* فوتر */
         .footer {
             text-align: center;
-            padding: 30px;
+            padding: 25px;
             color: var(--muted);
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        /* موبايل */
         @media (max-width: 600px) {
-            .days-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .day-num { font-size: 32px; }
-            .confirm-section { padding: 20px; }
+            .days-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .day-num { font-size: 28px; }
+            .day-name, .day-month { font-size: 10px; }
+            .confirm-section { padding: 18px; }
+            .info-bar { gap: 8px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+
     {{-- هيدر --}}
     <div class="header">
         <div class="logo-badge">
             <i class="fas fa-umbrella-beach"></i>
             نظام طلبات الراحة
         </div>
-        <h1>اختار يوم راحتك</h1>
-        <p>اختار اليوم المناسب ليك وأكد بـ رقم الموظف بتاعك</p>
+        <h1>اختار أيام راحتك</h1>
+        <p>تقدر تسجل حتى <strong style="color:var(--accent)">5 أيام راحة</strong> — من كل وظيفة 2 في اليوم الواحد</p>
     </div>
 
-    {{-- عرض الأخطاء --}}
+    {{-- شريط معلومات --}}
+    <div class="info-bar">
+        <div class="info-chip">
+            <span class="dot" style="background:var(--green)"></span>
+            اليوم متاح
+        </div>
+        <div class="info-chip">
+            <span class="dot" style="background:var(--accent)"></span>
+            محجوز جزئياً
+        </div>
+        <div class="info-chip">
+            <span class="dot" style="background:#444"></span>
+            مكتمل (وظيفتك ممتلية)
+        </div>
+        <div class="info-chip">
+            <span class="dot" style="background:var(--gold)"></span>
+            اليوم
+        </div>
+    </div>
+
+    {{-- أخطاء --}}
     @if ($errors->any())
         @foreach ($errors->all() as $error)
-            <div class="alert-box alert-error">
+            <div class="alert-box">
                 <i class="fas fa-exclamation-circle"></i>
                 {{ $error }}
             </div>
@@ -410,36 +404,60 @@
 
     {{-- عنوان الأيام --}}
     <div class="days-title">
-        <i class="fas fa-calendar-days" style="color: var(--accent)"></i>
-        الأيام المتاحة — 15 يومًا قادمة
+        <i class="fas fa-calendar-days" style="color:var(--accent)"></i>
+        الأيام المتاحة — {{ \App\Http\Controllers\DayOffController::DAYS_TO_SHOW }} يوماً قادمة
     </div>
 
     {{-- كروت الأيام --}}
     <div class="days-grid" id="daysGrid">
+        @php
+            // ألوان للوظائف — تتعيّن ديناميكياً
+            $jobColors = ['#e94560','#3498db','#2ecc71','#f5a623','#9b59b6','#1abc9c','#e67e22','#e74c3c'];
+            $jobColorMap = [];
+            $colorIdx = 0;
+        @endphp
+
         @foreach ($days as $day)
+            @php
+                $bookings   = $day['bookings'];
+                $jobCounts  = $day['job_counts'];
+
+                // لو في حجوزات → بيّن
+                $hasBookings = $bookings->count() > 0;
+
+                // لكل وظيفة — لو كل الوظائف وصلت حدها → full (صعب نعرفه بدون job_id الموظف الحالي)
+                // بنحطه كـ "partially booked" بس
+            @endphp
+
             <div
-                class="day-card {{ $day['is_booked'] ? 'booked' : '' }} {{ $loop->first ? 'today' : '' }}"
+                class="day-card {{ $loop->first ? 'today' : '' }} {{ $hasBookings ? 'partial' : '' }}"
                 data-date="{{ $day['date_str'] }}"
                 data-label="{{ $day['day_name'] }} {{ $day['day_num'] }} {{ $day['month'] }}"
-                onclick="{{ $day['is_booked'] ? '' : 'selectDay(this)' }}"
+                onclick="selectDay(this)"
             >
-                {{-- شارة محجوز --}}
-                @if ($day['is_booked'])
-                    <div class="booked-badge">
-                        <i class="fas fa-lock"></i>
-                        {{ $day['booked_by'] }}
-                    </div>
-                @else
-                    <div class="selected-badge">✓</div>
-                @endif
+                <div class="selected-badge">✓</div>
 
                 <div class="day-num">{{ $day['day_num'] }}</div>
                 <div class="day-name">{{ $day['day_name'] }}</div>
                 <div class="day-month">{{ $day['month'] }}</div>
 
-                @if ($day['is_booked'])
-                    <div style="margin-top:10px; font-size:11px; color:var(--muted)">
-                        <i class="fas fa-user"></i> محجوز
+                {{-- عرض الحجوزات --}}
+                @if ($hasBookings)
+                    <div class="card-bookings">
+                        @foreach ($bookings as $booking)
+                            @php
+                                $jid = $booking->employee->job_id ?? 0;
+                                if (!isset($jobColorMap[$jid])) {
+                                    $jobColorMap[$jid] = $jobColors[$colorIdx % count($jobColors)];
+                                    $colorIdx++;
+                                }
+                                $color = $jobColorMap[$jid];
+                            @endphp
+                            <div class="booking-tag">
+                                <span class="dot-job" style="background:{{ $color }}"></span>
+                                {{ mb_substr($booking->employee->name, 0, 10) }}
+                            </div>
+                        @endforeach
                     </div>
                 @endif
             </div>
@@ -452,7 +470,7 @@
             <div class="selected-day-icon">🏖️</div>
             <div class="selected-day-info">
                 <h3 id="selectedDayLabel">—</h3>
-                <p>اليوم المختار لراحتك</p>
+                <p>اليوم المختار — أكد برقم الموظف</p>
             </div>
         </div>
 
@@ -462,16 +480,15 @@
 
             <label class="form-label">
                 <i class="fas fa-id-badge" style="color:var(--accent)"></i>
-                ادخل رقم الموظف بتاعك للتأكيد
+                ادخل رقم الموظف بتاعك
             </label>
             <input
                 type="number"
                 name="employee_code"
                 class="form-input"
-                placeholder="مثال: 1234"
+                placeholder="رقم الموظف"
                 value="{{ old('employee_code') }}"
                 required
-                autofocus
             >
 
             <button type="submit" class="submit-btn">
@@ -482,57 +499,46 @@
     </div>
 
     <div class="footer">
-        &copy; {{ date('Y') }} — كشري التحرير | نظام إدارة الراحات
+        &copy; {{ date('Y') }} — كشري التحرير | نظام إدارة الراحات | تم التطوير بواسطة ميدو شركس
     </div>
 </div>
 
-{{-- SweetAlert --}}
 @include('vendor.sweetalert.alert')
 
 <script>
     let selectedCard = null;
 
     function selectDay(card) {
-        // شيل الاختيار القديم
-        if (selectedCard) {
-            selectedCard.classList.remove('selected');
-        }
-
-        // لو ضغط على نفس الكارد → الغي
         if (selectedCard === card) {
+            card.classList.remove('selected');
             selectedCard = null;
             document.getElementById('confirmSection').classList.remove('show');
             return;
         }
 
-        // اختار الجديد
+        if (selectedCard) selectedCard.classList.remove('selected');
+
         card.classList.add('selected');
         selectedCard = card;
 
-        const date = card.dataset.date;
-        const label = card.dataset.label;
+        document.getElementById('selectedDateInput').value = card.dataset.date;
+        document.getElementById('selectedDayLabel').textContent = card.dataset.label;
 
-        document.getElementById('selectedDateInput').value = date;
-        document.getElementById('selectedDayLabel').textContent = label;
-        document.getElementById('confirmSection').classList.add('show');
+        const section = document.getElementById('confirmSection');
+        section.classList.add('show');
 
-        // سكرول للفورم
         setTimeout(() => {
-            document.getElementById('confirmSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
     }
 
-    // لو في قيمة قديمة (بعد فشل الفورم)
+    // استعادة الاختيار بعد فشل الفورم
     const oldDate = "{{ old('date') }}";
     if (oldDate) {
-        const cards = document.querySelectorAll('.day-card:not(.booked)');
-        cards.forEach(card => {
-            if (card.dataset.date === oldDate) {
-                selectDay(card);
-            }
+        document.querySelectorAll('.day-card').forEach(card => {
+            if (card.dataset.date === oldDate) selectDay(card);
         });
     }
 </script>
-
 </body>
 </html>
