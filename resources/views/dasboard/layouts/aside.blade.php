@@ -226,6 +226,25 @@
                         </li>
                     </ul>
                 </li>
+                {{-- Shift Schedule --}}
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <p>
+                            {{ display('shift ' . 'schedule') }}
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                        <i class="fas fa-calendar-times-o"></i>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard.shift_schedule.index') }}" class="nav-link" rel="noopener noreferrer">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ display('shift ' . 'schedule') }}</p>
+                                <i class="fas fa-calendar-times-o"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
                 <!-- ---------------------@ FOR  Files--------------------------- -->

@@ -21,6 +21,7 @@ use App\Http\Controllers\LanguagesController;
 use App\Http\Controllers\Office\AdvancesControllers;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\SettingPdfController;
+use App\Http\Controllers\ShiftScheduleController;
 use App\Http\Controllers\Socil\FacebookController;
 use App\Http\Controllers\Socil\GoogleController;
 use App\Http\Controllers\TipController;
@@ -102,9 +103,13 @@ Route::group(
         Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
         Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
 
+        // Day Off Requests - For Employees
         // ---- لينك الموظفين العام (بدون لوجين) ----
         Route::get('/dayoff',  [DayOffController::class, 'index'])->name('dayoff.index');
         Route::post('/dayoff', [DayOffController::class, 'store'])->name('dayoff.store');
+
+        // Shift Schedule
+        // Route::get('/shift_schedule', [ShiftScheduleController::class, 'indexFront'])->name('shift_schedule.indexFront');
     }
 );
 
@@ -220,13 +225,15 @@ Route::group(
             Route::get('/cashierpost/{id}/edit', [CashierPostController::class, 'edit'])->name('cashierpost.edit');
             Route::put('/cashierpost/{id}/edit', [CashierPostController::class, 'update'])->name('cashierpost.update');
 
+            // Day Off Requests - For Admin
             // طلبات الراحة - للأدمن
-
             Route::get('/dayoff',   [DayOffController::class, 'adminIndex'])->name('dayoff.index');
-
             // ✅ الإصلاح: POST بدل PATCH — عشان onchange submit يشتغل صح
             Route::post('/dayoff/{id}/status',  [DayOffController::class, 'updateStatus'])->name('dayoff.status');
             Route::delete('/dayoff/{id}',       [DayOffController::class, 'destroy'])->name('dayoff.destroy');
+
+            // Shift Schedule
+            Route::resource('/shift_schedule', ShiftScheduleController::class)->only(['index', 'store']);
         });
     }
 );
